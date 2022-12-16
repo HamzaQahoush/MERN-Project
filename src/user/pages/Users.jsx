@@ -1,10 +1,15 @@
-
-import React from 'react'
-
+import React from "react";
+import UserList from "../components/UsersList";
 function Users() {
-  return (
-    <div>Users</div>
-  )
+  const Users = [
+    {
+      id: 1,
+      name: "Hamza Qahoush",
+      image: "https://avatars.githubusercontent.com/u/79087330?v=4",
+      places: 3,
+    },
+  ];
+  return <UserList items={Users} />;
 }
 
-export default Users
+export default Users;
