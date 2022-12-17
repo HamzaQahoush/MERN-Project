@@ -10,7 +10,7 @@ function NavLinks(props) {
         </NavLink>
       </li>
       <li>
-        <NavLink to="/ul/places"> My places</NavLink>
+        <NavLink to="/u1/places"> My places</NavLink>
       </li>
       <li>
         <NavLink to="/places/new"> add place</NavLink>
