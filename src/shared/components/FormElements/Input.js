@@ -1,58 +1,71 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
+
 import { validate } from "../../util/validators";
 import "./Input.css";
+
 const inputReducer = (state, action) => {
-  // we need to retrun new state
   switch (action.type) {
-    case "Change":
+    case "CHANGE":
       return {
         ...state,
-        value: action.value,
+        value: action.val,
         isValid: validate(action.val, action.validators),
       };
-    case "Touch":
+    case "TOUCH": {
       return {
         ...state,
         isTouched: true,
       };
+    }
     default:
       return state;
   }
 };
+
 const Input = (props) => {
-  const ChangeHandler = (e) => {
+  const [inputState, dispatch] = useReducer(inputReducer, {
+    value: "",
+    isTouched: false,
+    isValid: false,
+  });
+
+  const { id, onInput } = props;
+  const { value, isValid } = inputState;
+
+  useEffect(() => {
+    onInput(id, value, isValid);
+  }, [id, value, isValid, onInput]);
+
+  const changeHandler = (event) => {
     dispatch({
-      type: "Change",
-      val: e.target.value,
+      type: "CHANGE",
+      val: event.target.value,
       validators: props.validators,
     });
   };
-  /* manage state in component , gives you a function you can call which updates the state and re-render
-  the component , it used for complex states, interconnected state
-  */
-  const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
-    isValid: false,
-    isTouched: false,
-  });
+
   const touchHandler = () => {
-    dispatch({ type: "Touch" });
+    dispatch({
+      type: "TOUCH",
+    });
   };
+
   const element =
     props.element === "input" ? (
       <input
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
-        onChange={ChangeHandler}
-        value={inputState.value}
+        onChange={changeHandler}
         onBlur={touchHandler}
+        value={inputState.value}
       />
     ) : (
       <textarea
         id={props.id}
         rows={props.rows || 3}
-        onChange={ChangeHandler}
+        onChange={changeHandler}
+        onBlur={touchHandler}
         value={inputState.value}
       />
     );
