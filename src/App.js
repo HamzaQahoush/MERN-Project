@@ -1,28 +1,34 @@
-import "./App.css";
+import './App.css';
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
   Switch,
-} from "react-router-dom";
-import { useCallback, useState } from "react";
-import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
-import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import UserPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
-import Auth from "./user/pages/Auth";
-import { AuthContext } from "./shared/context/auth-context";
-function App() {
+} from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import Users from './user/pages/Users';
+import NewPlace from './places/pages/NewPlace';
+import MainNavigation from './shared/components/Navigation/MainNavigation';
+import UserPlaces from './places/pages/UserPlaces';
+import UpdatePlace from './places/pages/UpdatePlace';
+import Auth from './user/pages/Auth';
+import { AuthContext } from './shared/context/auth-context';
+const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const login = useCallback(() => {
+  const [userId, setUserId] = useState(false);
+
+  const login = useCallback(uid => {
     setIsLoggedIn(true);
-  },[]);
+    setUserId(uid);
+  }, []);
+
   const logout = useCallback(() => {
     setIsLoggedIn(false);
-  },[]);
+    setUserId(null);
+  }, []);
 
   let routes;
+
   if (isLoggedIn) {
     routes = (
       <Switch>
@@ -35,8 +41,7 @@ function App() {
         <Route path="/places/new" exact>
           <NewPlace />
         </Route>
-
-        <Route path="/places/:placeId" exact>
+        <Route path="/places/:placeId">
           <UpdatePlace />
         </Route>
         <Redirect to="/" />
@@ -51,23 +56,30 @@ function App() {
         <Route path="/:userId/places" exact>
           <UserPlaces />
         </Route>
-        <Route path="/auth" exact>
+        <Route path="/auth">
           <Auth />
         </Route>
         <Redirect to="/auth" />
       </Switch>
     );
   }
+
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+      value={{
+        isLoggedIn: isLoggedIn,
+        userId: userId,
+        login: login,
+        logout: logout
+      }}
     >
       <Router>
         <MainNavigation />
-        <main>{routes} </main>
+        <main>{routes}</main>
       </Router>
     </AuthContext.Provider>
   );
-}
+};
+
 
 export default App;
