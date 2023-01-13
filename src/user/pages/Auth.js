@@ -13,6 +13,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import  {useHttpClient}  from '../../shared/hooks/http-hook';
+import ImageUploader from '../../shared/components/FormElements/ImageUploader';
 function Auth() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
@@ -113,14 +114,15 @@ function Auth() {
             errorText="please provide a correct email"
             onInput={inputHandler}
           ></Input>
+          {!isLoginMode && <ImageUploader center id="image" />}
           <Input
             id="password"
             element="input"
             type="Password"
             placeholder="password"
             label="password"
-            validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="please provide a password with 5 chara length"
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText="please provide a password with 6 chara length"
             onInput={inputHandler}
           ></Input>
           <Button type="submit" disabled={!formState.isValid}>

@@ -27,7 +27,9 @@ export const useHttpClient = () => {
           (reqCtrl) => reqCtrl !== httpAbortCtrl
         );
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error(responseData.message);
+
         }
         setIsLoading(false);
         return responseData;
@@ -54,3 +56,4 @@ export const useHttpClient = () => {
 
   return { isLoading, error, sendRequest, clearError };
 };
+
